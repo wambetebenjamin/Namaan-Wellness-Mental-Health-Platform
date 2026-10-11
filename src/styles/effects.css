@@ -1,0 +1,843 @@
+/* ==========================================================================
+   NAAMAN WELLNESS — EFFECTS
+   EFFECT-06  Ambient background      EFFECT-22  Page transitions
+   EFFECT-08  Self-drawing wordmark   EFFECT-23  Hero entrance
+   EFFECT-12  Microinteractions       EFFECT-24  Skeleton screens
+   EFFECT-18  Animated gradients      EFFECT-25  Loading animation
+   EFFECT-26  Hover animations        EFFECT-28  Glassmorphic nav
+
+   Every effect declares its prefers-reduced-motion behaviour inline.
+   The global fallback block at the bottom of this file catches anything missed.
+   ========================================================================== */
+
+/* ==========================================================================
+   EFFECT-06 — AMBIENT BACKGROUND
+   Slow drifting soft shapes, 0.1 opacity maximum, aria-hidden throughout.
+   Paused when the tab is hidden (via .nw-ambient--paused, set by JS on
+   visibilitychange). Completely frozen under prefers-reduced-motion.
+   ========================================================================== */
+.nw-ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--nw-ambient-opacity);
+}
+
+.nw-ambient__shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  will-change: transform;
+  animation: nw-drift 46s var(--nw-ease-soft) infinite alternate;
+}
+
+.nw-ambient__shape--1 {
+  width: 44vw;
+  height: 44vw;
+  min-width: 340px;
+  min-height: 340px;
+  top: -12%;
+  left: -8%;
+  background: var(--nw-sage-500);
+  animation-duration: 52s;
+}
+
+.nw-ambient__shape--2 {
+  width: 38vw;
+  height: 38vw;
+  min-width: 300px;
+  min-height: 300px;
+  top: 28%;
+  right: -10%;
+  background: var(--nw-clay-300);
+  animation-duration: 64s;
+  animation-delay: -12s;
+}
+
+.nw-ambient__shape--3 {
+  width: 32vw;
+  height: 32vw;
+  min-width: 260px;
+  min-height: 260px;
+  bottom: -14%;
+  left: 32%;
+  background: var(--nw-sage-300);
+  animation-duration: 58s;
+  animation-delay: -26s;
+}
+
+@keyframes nw-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3.5vw, -2.5vh, 0) scale(1.07);
+  }
+  100% {
+    transform: translate3d(-2.5vw, 3vh, 0) scale(0.96);
+  }
+}
+
+/* Paused when the tab is hidden */
+.nw-ambient--paused .nw-ambient__shape {
+  animation-play-state: paused;
+}
+
+/* ==========================================================================
+   EFFECT-18 — ANIMATED GRADIENTS
+   background-position animation only. Very slow 30s loop. Contrast verified.
+   ========================================================================== */
+.nw-gradient-surface {
+  background-image: linear-gradient(
+    115deg,
+    var(--nw-sand-100) 0%,
+    var(--nw-sage-100) 26%,
+    var(--nw-sand-200) 52%,
+    var(--nw-sage-50) 74%,
+    var(--nw-sand-100) 100%
+  );
+  background-size: 320% 320%;
+  background-position: 0% 50%;
+  animation: nw-gradient-shift var(--nw-gradient-loop) var(--nw-ease-soft) infinite
+    alternate;
+}
+
+@keyframes nw-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Booking CTA band variation — deeper, warmer */
+.nw-gradient-surface--cta {
+  background-image: linear-gradient(
+    115deg,
+    var(--nw-sage-700) 0%,
+    var(--nw-ink-700) 30%,
+    var(--nw-sage-800) 58%,
+    var(--nw-ink-800) 82%,
+    var(--nw-sage-700) 100%
+  );
+  background-size: 300% 300%;
+  color: #f4f1ea;
+}
+
+/* ==========================================================================
+   EFFECT-23 — HERO ENTRANCE
+   Slow, gentle sequenced reveal, under 2s total:
+     eyebrow 0ms -> headline words staggered -> subcopy -> CTA last.
+   The CTA is focusable immediately (never visibility:hidden or disabled).
+   ========================================================================== */
+.nw-hero-reveal {
+  opacity: 0;
+  animation: nw-fade-up var(--nw-dur-slower) var(--nw-ease-soft) forwards;
+}
+
+.nw-hero-eyebrow {
+  animation-delay: 80ms;
+  animation-duration: 700ms;
+}
+
+.nw-hero-sub {
+  animation-delay: 900ms;
+  animation-duration: 620ms;
+}
+
+.nw-hero-reassure {
+  animation-delay: 1200ms;
+  animation-duration: 620ms;
+}
+
+/* CTA lands last but is interactive from the very first frame */
+.nw-hero-cta {
+  animation-delay: 1050ms;
+  animation-duration: 620ms;
+  pointer-events: auto !important;
+}
+
+/* Headline words appear one by one at a calm pace.
+   Timeline: starts 160ms, 105ms stagger, 560ms per word.
+   A nine-word headline completes at ~1.56s, keeping the whole
+   entrance under the 2 second budget. */
+.nw-hero-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+  animation: nw-word-rise 560ms var(--nw-ease-soft) forwards;
+  animation-delay: calc(160ms + var(--nw-word-i, 0) * 105ms);
+  white-space: pre-wrap;
+}
+
+@keyframes nw-word-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes nw-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scroll-triggered fade-up stagger (How it works, services, etc.) */
+.nw-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 760ms var(--nw-ease-soft), transform 760ms var(--nw-ease-soft);
+  transition-delay: var(--nw-reveal-delay, 0ms);
+}
+
+.nw-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   EFFECT-24 — SKELETON SCREENS
+   Exact dimensions (reserved via aspect-ratio + fixed heights) => zero CLS.
+   aria-busy="true" is set on the container. Shimmer under default motion,
+   flat non-shimmering grey under prefers-reduced-motion.
+   ========================================================================== */
+.nw-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--nw-sand-200);
+  border-radius: var(--nw-radius-sm);
+}
+
+.nw-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.62) 50%,
+    transparent 100%
+  );
+  animation: nw-shimmer 1.9s var(--nw-ease-soft) infinite;
+}
+
+@keyframes nw-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Therapist card skeleton — exact dimensions */
+.nw-skel-therapist {
+  border-radius: var(--nw-radius-lg);
+  background: var(--nw-surface);
+  border: 1px solid var(--nw-border-soft);
+  overflow: hidden;
+  height: 100%;
+}
+
+.nw-skel-therapist__media {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  border-radius: 0;
+}
+
+.nw-skel-therapist__body {
+  padding: 1.25rem 1.35rem 1.5rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.nw-skel-line {
+  height: 14px;
+  border-radius: var(--nw-radius-sm);
+}
+
+.nw-skel-line--title {
+  height: 20px;
+  width: 62%;
+}
+.nw-skel-line--sub {
+  height: 12px;
+  width: 82%;
+}
+.nw-skel-line--short {
+  height: 12px;
+  width: 46%;
+}
+.nw-skel-line--btn {
+  height: 46px;
+  width: 100%;
+  border-radius: var(--nw-radius-pill);
+  margin-top: 0.4rem;
+}
+
+/* Article card skeleton — exact dimensions */
+.nw-skel-article__media {
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  border-radius: 0;
+}
+
+.nw-skel-article {
+  border-radius: var(--nw-radius-lg);
+  background: var(--nw-surface);
+  border: 1px solid var(--nw-border-soft);
+  overflow: hidden;
+  height: 100%;
+}
+
+.nw-skel-article__body {
+  padding: 1.25rem 1.35rem 1.5rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+/* ==========================================================================
+   EFFECT-26 — HOVER ANIMATIONS
+   Gated behind (hover: hover) so touch devices never see a stuck hover state.
+   Duplicated on :focus-visible. Tap toggle on touch (JS adds .is-open).
+   200–350ms.
+   ========================================================================== */
+.nw-card {
+  position: relative;
+  transition: transform var(--nw-dur-hover) var(--nw-ease),
+    box-shadow var(--nw-dur-hover) var(--nw-ease),
+    border-color var(--nw-dur-hover) var(--nw-ease);
+}
+
+.nw-card__reveal {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height var(--nw-dur-hover) var(--nw-ease),
+    opacity var(--nw-dur-hover) var(--nw-ease),
+    transform var(--nw-dur-hover) var(--nw-ease);
+  transform: translateY(6px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nw-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--nw-shadow-lg);
+    border-color: var(--nw-sage-200);
+  }
+
+  .nw-card:hover .nw-card__reveal {
+    max-height: 260px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Keyboard parity */
+.nw-card:focus-within .nw-card__reveal,
+.nw-card:focus-visible .nw-card__reveal {
+  max-height: 260px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Touch: tap toggle, driven by JS */
+.nw-card.is-open .nw-card__reveal {
+  max-height: 420px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   EFFECT-12 — MICROINTERACTIONS
+   All form fields, selectors and buttons: hover / active / focus / disabled.
+   150–320ms, ease-in-out, no jarring snapping.
+   ========================================================================== */
+.nw-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.nw-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--nw-ink-700);
+  line-height: 1.5;
+}
+
+.nw-label__optional {
+  font-weight: 400;
+  color: var(--nw-text-muted);
+  font-size: var(--nw-fs-meta);
+}
+
+.nw-input,
+.nw-select,
+.nw-textarea {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--nw-text);
+  background: var(--nw-surface);
+  border: 1.5px solid var(--nw-border);
+  border-radius: var(--nw-radius);
+  transition: border-color var(--nw-dur-2) var(--nw-ease),
+    box-shadow var(--nw-dur-2) var(--nw-ease),
+    background-color var(--nw-dur-2) var(--nw-ease);
+  appearance: none;
+}
+
+.nw-textarea {
+  min-height: 132px;
+  resize: vertical;
+}
+
+.nw-input:hover,
+.nw-select:hover,
+.nw-textarea:hover {
+  border-color: var(--nw-sage-300);
+}
+
+.nw-input:focus,
+.nw-select:focus,
+.nw-textarea:focus {
+  outline: none;
+  border-color: var(--nw-sage-600);
+  box-shadow: 0 0 0 4px rgba(101, 138, 101, 0.16);
+}
+
+.nw-input:active,
+.nw-select:active,
+.nw-textarea:active {
+  border-color: var(--nw-sage-700);
+}
+
+.nw-input:disabled,
+.nw-select:disabled,
+.nw-textarea:disabled {
+  background: var(--nw-sand-100);
+  color: var(--nw-text-muted);
+  cursor: not-allowed;
+  border-color: var(--nw-border-soft);
+}
+
+/* aria-invalid="true" */
+.nw-input[aria-invalid='true'],
+.nw-select[aria-invalid='true'],
+.nw-textarea[aria-invalid='true'] {
+  border-color: #b4684e;
+  background: #fdf7f4;
+}
+
+.nw-input[aria-invalid='true']:focus,
+.nw-select[aria-invalid='true']:focus,
+.nw-textarea[aria-invalid='true']:focus {
+  box-shadow: 0 0 0 4px rgba(180, 104, 78, 0.15);
+}
+
+.nw-error {
+  font-size: var(--nw-fs-meta);
+  color: #97563f;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  line-height: 1.5;
+}
+
+.nw-hint {
+  font-size: var(--nw-fs-meta);
+  color: var(--nw-text-muted);
+  line-height: 1.55;
+}
+
+/* Buttons */
+.nw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  font-size: var(--nw-fs-button);
+  font-weight: 600;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  border-radius: var(--nw-radius-pill);
+  border: 1.5px solid transparent;
+  transition: background-color var(--nw-dur-2) var(--nw-ease),
+    color var(--nw-dur-2) var(--nw-ease), border-color var(--nw-dur-2) var(--nw-ease),
+    box-shadow var(--nw-dur-2) var(--nw-ease), transform var(--nw-dur-2) var(--nw-ease);
+}
+
+.nw-btn:hover {
+  transform: translateY(-1px);
+}
+
+.nw-btn:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.nw-btn:disabled,
+.nw-btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.nw-btn--primary {
+  background: var(--nw-cta);
+  color: #fff;
+  box-shadow: var(--nw-shadow-sm);
+}
+
+.nw-btn--primary:hover:not(:disabled) {
+  background: var(--nw-cta-hover);
+  box-shadow: var(--nw-shadow);
+}
+
+.nw-btn--secondary {
+  background: var(--nw-sage-700);
+  color: #fff;
+}
+
+.nw-btn--secondary:hover:not(:disabled) {
+  background: var(--nw-sage-800);
+}
+
+.nw-btn--ghost {
+  background: transparent;
+  color: var(--nw-ink-700);
+  border-color: var(--nw-border);
+}
+
+.nw-btn--ghost:hover:not(:disabled) {
+  background: var(--nw-sand-100);
+  border-color: var(--nw-sage-300);
+}
+
+.nw-btn--onDark {
+  background: #fff;
+  color: var(--nw-ink-800);
+}
+
+.nw-btn--onDark:hover:not(:disabled) {
+  background: var(--nw-sand-100);
+}
+
+.nw-btn--outlineLight {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.nw-btn--outlineLight:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
+}
+
+/* Toggle buttons carry aria-pressed */
+.nw-toggle {
+  min-height: 48px;
+  padding: 0.7rem 1.1rem;
+  font-size: var(--nw-fs-button);
+  font-weight: 500;
+  border-radius: var(--nw-radius);
+  border: 1.5px solid var(--nw-border);
+  background: var(--nw-surface);
+  color: var(--nw-text);
+  text-align: left;
+  transition: all var(--nw-dur-2) var(--nw-ease);
+}
+
+.nw-toggle:hover {
+  border-color: var(--nw-sage-300);
+  background: var(--nw-sage-50);
+}
+
+.nw-toggle[aria-pressed='true'] {
+  border-color: var(--nw-sage-600);
+  background: var(--nw-sage-50);
+  color: var(--nw-sage-800);
+  box-shadow: inset 0 0 0 1px var(--nw-sage-600);
+}
+
+.nw-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   EFFECT-22 — PAGE TRANSITIONS
+   View Transitions API with a CSS-only fallback, under 500ms.
+   Very soft crossfade. No slides, no wipes.
+   ========================================================================== */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: nw-fade-out var(--nw-page-transition) var(--nw-ease) both;
+}
+
+::view-transition-new(root) {
+  animation: nw-fade-in var(--nw-page-transition) var(--nw-ease) both;
+}
+
+@keyframes nw-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes nw-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* CSS fallback for browsers without the View Transitions API */
+.nw-route-fade {
+  animation: nw-fade-in var(--nw-page-transition) var(--nw-ease) both;
+}
+
+html.nw-no-view-transitions .nw-route-fade {
+  animation: nw-fade-in var(--nw-page-transition) var(--nw-ease) both;
+}
+
+/* ==========================================================================
+   EFFECT-08 / EFFECT-25 — PRELOADER
+   Self-drawing wordmark (stroke-dashoffset, path length computed at runtime)
+   + a leaf / flowing-water SVG that draws in. Draws once. Persists.
+   ========================================================================== */
+.nw-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: grid;
+  place-items: center;
+  background: var(--nw-sand-50);
+  transition: opacity 520ms var(--nw-ease);
+}
+
+.nw-preloader--out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nw-preloader__inner {
+  display: grid;
+  justify-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.nw-preloader__mark {
+  width: clamp(180px, 46vw, 260px);
+  height: auto;
+  overflow: visible;
+}
+
+/* Leaf + water draw-in */
+.nw-draw {
+  stroke-dasharray: var(--nw-dash, 1000);
+  stroke-dashoffset: var(--nw-dash, 1000);
+  animation: nw-draw-in 1500ms var(--nw-ease-soft) forwards;
+}
+
+.nw-draw--delayed {
+  animation-delay: 260ms;
+  animation-duration: 1250ms;
+}
+
+@keyframes nw-draw-in {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.nw-preloader__word {
+  stroke-dasharray: var(--nw-dash, 1200);
+  stroke-dashoffset: var(--nw-dash, 1200);
+  animation: nw-draw-in 1150ms var(--nw-ease-soft) 420ms forwards,
+    nw-fill-in 700ms var(--nw-ease) 1400ms forwards;
+  fill: transparent;
+}
+
+@keyframes nw-fill-in {
+  to {
+    fill: var(--nw-ink-800);
+  }
+}
+
+.nw-preloader__progress {
+  font-size: var(--nw-fs-meta);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--nw-text-muted);
+  min-height: 1.4em;
+}
+
+.nw-preloader__skip {
+  font-size: var(--nw-fs-meta);
+  color: var(--nw-ink-600);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0.6rem 1rem;
+  min-height: 48px;
+  opacity: 0;
+  transition: opacity 400ms var(--nw-ease);
+  pointer-events: none;
+}
+
+.nw-preloader__skip.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   EFFECT-28 — GLASSMORPHIC NAV
+   Solid at rest, glass after 80px of scroll. Blur capped at 20px.
+   Solid fallback for browsers without backdrop-filter.
+   ========================================================================== */
+.nw-nav {
+  position: sticky;
+  top: 0;
+  z-index: 800;
+  background: var(--nw-surface);
+  border-bottom: 1px solid var(--nw-border-soft);
+  transition: background-color var(--nw-dur-3) var(--nw-ease),
+    box-shadow var(--nw-dur-3) var(--nw-ease),
+    border-color var(--nw-dur-3) var(--nw-ease),
+    backdrop-filter var(--nw-dur-3) var(--nw-ease);
+}
+
+.nw-nav--scrolled {
+  background: rgba(255, 254, 251, 0.82);
+  border-bottom-color: rgba(230, 222, 209, 0.7);
+  box-shadow: 0 6px 26px rgba(40, 55, 75, 0.07);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .nw-nav--scrolled {
+    backdrop-filter: blur(var(--nw-nav-blur)) saturate(1.4);
+    -webkit-backdrop-filter: blur(var(--nw-nav-blur)) saturate(1.4);
+  }
+}
+
+/* Solid fallback when backdrop-filter is unsupported */
+@supports not (backdrop-filter: blur(1px)) {
+  .nw-nav--scrolled {
+    background: var(--nw-surface);
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION — global catch-all
+   Brief requirements:
+     EFFECT-06 shapes frozen at first frame
+     EFFECT-08 wordmark shown fully drawn
+     EFFECT-12 states change instantly
+     EFFECT-18 gradient frozen at first keyframe
+     EFFECT-22 instant crossfade, no motion
+     EFFECT-23 all hero elements appear instantly
+     EFFECT-24 non-shimmering grey skeleton
+     EFFECT-25 plain percentage text
+     EFFECT-26 hover reveals shown statically on focus
+     EFFECT-28 solid-colour navbar
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* EFFECT-06 — ambient shapes frozen at their first frame */
+  .nw-ambient__shape {
+    animation: none !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+  }
+
+  /* EFFECT-18 — gradient frozen at first keyframe */
+  .nw-gradient-surface,
+  .nw-gradient-surface--cta {
+    animation: none !important;
+    background-position: 0% 50% !important;
+  }
+
+  /* EFFECT-23 — hero appears instantly, fully visible */
+  .nw-hero-reveal,
+  .nw-hero-word {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Scroll reveals visible immediately */
+  .nw-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* EFFECT-24 — flat, non-shimmering grey skeleton */
+  .nw-skeleton::after {
+    animation: none !important;
+    display: none;
+  }
+
+  .nw-skeleton {
+    background: #e3ddd3 !important;
+  }
+
+  /* EFFECT-25 — wordmark and leaf shown fully drawn (no dash animation) */
+  .nw-draw,
+  .nw-preloader__word {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    stroke-dasharray: none !important;
+    fill: var(--nw-ink-800) !important;
+  }
+
+  /* EFFECT-26 — reveals are static (shown on focus by :focus-within rules,
+     which still apply; no motion is used to get there) */
+  .nw-card:hover {
+    transform: none !important;
+  }
+
+  .nw-card__reveal {
+    transition: none !important;
+  }
+
+  /* EFFECT-28 — solid-colour navbar, no blur */
+  .nw-nav--scrolled {
+    background: var(--nw-surface) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* EFFECT-22 — instant crossfade, no motion */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}

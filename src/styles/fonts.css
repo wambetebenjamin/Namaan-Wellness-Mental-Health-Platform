@@ -1,0 +1,52 @@
+/* ==========================================================================
+   NAAMAN WELLNESS — FONTS
+   --------------------------------------------------------------------------
+   @font-face rules reproduced VERBATIM from the design ZIP.
+
+   INVENTORY: the ZIP contained exactly TWO authored @font-face rules, both
+   vendored icon fonts. There were no self-hosted text fonts — the ZIP loaded
+   Exo + Roboto via a Google Fonts @import (scss/_typography.scss) and
+   Montserrat via <link> in every HTML page. Both sources are reproduced
+   below / in the document <head>.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   @font-face #1 — VERBATIM from plugins/icofont/icofont.css (line 9)
+   @package IcoFont @version 1.0.1 @author IcoFont https://icofont.com
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'IcoFont';
+  font-weight: normal;
+  font-style: 'Regular';
+  src: url('/fonts/icofont/icofont.woff2') format('woff2'),
+    url('/fonts/icofont/icofont.woff') format('woff');
+}
+
+/* --------------------------------------------------------------------------
+   @font-face #2 — VERBATIM from plugins/slick-carousel/slick/slick-theme.css
+   (line 9). Retained for fidelity; the testimonial carousel is now a
+   dependency-free crossfade and does not render slick glyphs.
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'slick';
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('/fonts/slick/slick.ttf') format('truetype'),
+    url('/fonts/slick/slick.woff') format('woff');
+}
+
+/* --------------------------------------------------------------------------
+   Text fonts — loaded from Google Fonts exactly as the ZIP did:
+     scss/_typography.scss : Exo:500,600,700 | Roboto
+     *.html <head>         : Montserrat:500;800;900
+   Loaded via <link> in app/layout.tsx rather than @import so the request is
+   not blocked behind CSS. The fallback stacks below keep the site reading
+   comfortably if the network is unavailable.
+   -------------------------------------------------------------------------- */
+:root {
+  --nw-font-heading: 'Exo', 'Montserrat', 'Segoe UI', system-ui, -apple-system,
+    'Helvetica Neue', Arial, sans-serif;
+  --nw-font-body: 'Roboto', 'Segoe UI', system-ui, -apple-system,
+    'Helvetica Neue', Arial, sans-serif;
+}

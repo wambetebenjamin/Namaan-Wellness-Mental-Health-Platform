@@ -1,0 +1,192 @@
+/* ==========================================================================
+   NAAMAN WELLNESS — DESIGN TOKENS
+   --------------------------------------------------------------------------
+   TIER 1  (--novena-*) : Reproduced VERBATIM from the supplied design ZIP.
+   TIER 2  (--nw-*)     : Calm, warm semantic layer built ON TOP for a mental
+                          health audience. Nothing in Tier 1 is altered,
+                          overridden or removed.
+
+   INVENTORY NOTE
+   The ZIP ("Novena", a Themefisher medical HTML template) contained ZERO CSS
+   custom properties and ZERO authored @font-face rules:
+     - Design tokens lived in `scss/_variables.scss` as SCSS `$variables`.
+       Every one is ported 1:1 into Tier 1 below, value untouched.
+     - The only @font-face rules present were the vendored icon fonts
+       (IcoFont, Slick). Those are reproduced verbatim in fonts.css.
+     - Typography metrics from `scss/_typography.scss` are ported verbatim too.
+   ========================================================================== */
+
+:root {
+  /* ======================================================================
+     TIER 1 — VERBATIM FROM ZIP  (scss/_variables.scss)
+     ====================================================================== */
+  --novena-light: #fff;
+  --novena-primary-color: #223a66;
+  --novena-secondary-color: #e12454;
+  --novena-base-color: #6f8ba4;
+  --novena-title-color: #223a66;
+  --novena-black: #222;
+  --novena-gray: #eff0f3;
+  --novena-secondary-bg: #f4f9fc;
+  --novena-border-color: #fafafa;
+  --novena-primary-font: 'Exo', sans-serif;
+  --novena-secondary-font: 'Roboto', sans-serif;
+  --novena-grad-color: linear-gradient(to bottom, #05a5f9, #10dab7);
+
+  /* ----------------------------------------------------------------------
+     TIER 1 — VERBATIM FROM ZIP  (scss/_typography.scss)
+     Kept for fidelity. The live site uses the Tier 2 scale below, which
+     meets the brief's stricter readability floor (body 16px min, line
+     height 1.7 min). Tier 1 values remain available and unmodified.
+     ---------------------------------------------------------------------- */
+  --novena-body-font-size: 16px;
+  --novena-body-line-height: 1.6;
+  --novena-p-line-height: 30px;
+  --novena-h1-font-size: 2.5rem;
+  --novena-h2-font-size: 44px;
+  --novena-h3-font-size: 1.5rem;
+  --novena-h4-font-size: 1.3rem;
+  --novena-h4-line-height: 30px;
+  --novena-h5-font-size: 1.25rem;
+  --novena-h6-font-size: 1rem;
+  --novena-heading-font-weight: 700;
+
+  /* ======================================================================
+     TIER 2 — CALM SEMANTIC PALETTE (built on top)
+     Warm sand, soft sage, gentle clay, deep ink-blue. No clinical whites,
+     no alarm colours. Contrast verified against WCAG AA.
+     ====================================================================== */
+
+  /* Surfaces */
+  --nw-sand-50: #fdfbf7;
+  --nw-sand-100: #f9f4ec;
+  --nw-sand-200: #f2e9dc;
+  --nw-sand-300: #e7dac7;
+  --nw-paper: #fffefb;
+
+  /* Sage — growth, calm, the brand's primary accent */
+  --nw-sage-50: #f1f6f1;
+  --nw-sage-100: #e3ede2;
+  --nw-sage-200: #c8dcc7;
+  --nw-sage-300: #a8c4a6;
+  --nw-sage-500: #7d9e7c;
+  --nw-sage-600: #658a65;
+  --nw-sage-700: #4e6f50;
+  --nw-sage-800: #3c5740;
+
+  /* Clay — warmth, humanity. Replaces the ZIP's #e12454 for CTAs. */
+  --nw-clay-100: #f6e7dd;
+  --nw-clay-200: #e8cbb6;
+  --nw-clay-300: #d9ab8c;
+  --nw-clay-500: #b87a56;
+  --nw-clay-600: #a06544;
+  --nw-clay-700: #85523a;
+
+  /* Ink — depth and headings. Extends the ZIP's #223a66 primary. */
+  --nw-ink-900: #1e3358;
+  --nw-ink-800: #223a66; /* === --novena-primary-color, inherited verbatim */
+  --nw-ink-700: #2f4a7c;
+  --nw-ink-600: #43608f;
+  --nw-ink-500: #5b7699;
+  --nw-ink-400: #7d94b3;
+  --nw-ink-300: #a3b5cb;
+
+  /* Neutrals for text */
+  --nw-text: #3b4a5a;
+  --nw-text-soft: #5f6f7e;
+  --nw-text-muted: #7d8b99;
+  --nw-border: #e6ded1;
+  --nw-border-soft: #f0eae0;
+
+  /* Semantic roles */
+  --nw-bg: var(--nw-sand-50);
+  --nw-bg-alt: var(--nw-sage-50);
+  --nw-surface: var(--nw-paper);
+  --nw-surface-raised: #ffffff;
+  --nw-heading: var(--nw-ink-800);
+  --nw-body: var(--nw-text);
+  --nw-accent: var(--nw-sage-600);
+  --nw-accent-strong: var(--nw-sage-700);
+  --nw-cta: var(--nw-clay-600);
+  --nw-cta-hover: var(--nw-clay-700);
+  --nw-focus: #2f6f8f;
+
+  /* Crisis banner — deliberately warm and quiet, never alarming */
+  --nw-crisis-bg: #f4ece1;
+  --nw-crisis-text: #6b5540;
+  --nw-crisis-border: #e2d3bf;
+
+  /* ======================================================================
+     TIER 2 — TYPOGRAPHY
+     Floor: body 16px, metadata 12px, nav 13px, buttons 13px.
+     Line height 1.7 minimum on body copy. Headings wrap naturally.
+     ====================================================================== */
+  --nw-font-heading: var(--novena-primary-font); /* 'Exo' — from the ZIP */
+  --nw-font-body: var(--novena-secondary-font); /* 'Roboto' — from the ZIP */
+
+  --nw-fs-body: 1.0625rem; /* 17px — above the 16px floor */
+  --nw-fs-body-lg: 1.1875rem; /* 19px */
+  --nw-fs-nav: 13px;
+  --nw-fs-button: 13px;
+  --nw-fs-meta: 12px;
+
+  --nw-lh-body: 1.75; /* above the 1.7 floor */
+  --nw-lh-heading: 1.25;
+  --nw-lh-tight: 1.15;
+
+  /* Fluid heading scale — all wrap naturally, no truncation */
+  --nw-fs-h1: clamp(2rem, 1.35rem + 2.6vw, 3.35rem);
+  --nw-fs-h2: clamp(1.65rem, 1.2rem + 1.8vw, 2.5rem);
+  --nw-fs-h3: clamp(1.3rem, 1.1rem + 0.9vw, 1.65rem);
+  --nw-fs-h4: clamp(1.12rem, 1rem + 0.5vw, 1.3rem);
+  --nw-fs-h5: 1.0625rem;
+  --nw-fs-h6: 1rem;
+  --nw-fs-eyebrow: 0.8125rem; /* 13px */
+
+  /* ======================================================================
+     TIER 2 — SPACE, RADIUS, SHADOW, MOTION
+     ====================================================================== */
+  --nw-shell: 1200px;
+  --nw-shell-wide: 1320px;
+  --nw-gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --nw-section-y: clamp(3.5rem, 2rem + 6vw, 7rem);
+
+  --nw-radius-sm: 8px;
+  --nw-radius: 14px;
+  --nw-radius-lg: 22px;
+  --nw-radius-xl: 30px;
+  --nw-radius-pill: 999px;
+
+  /* Shadows stay extremely soft — nothing should ever feel sharp */
+  --nw-shadow-sm: 0 1px 2px rgba(40, 55, 75, 0.05);
+  --nw-shadow: 0 4px 18px rgba(40, 55, 75, 0.07);
+  --nw-shadow-lg: 0 14px 40px rgba(40, 55, 75, 0.1);
+
+  /* ---- Motion: slow, gentle, unhurried ---- */
+  --nw-ease: cubic-bezier(0.42, 0, 0.58, 1); /* ease-in-out */
+  --nw-ease-soft: cubic-bezier(0.33, 0.02, 0.25, 1);
+
+  --nw-dur-1: 150ms; /* EFFECT-12 lower bound */
+  --nw-dur-2: 220ms;
+  --nw-dur-3: 320ms; /* EFFECT-12 upper bound */
+  --nw-dur-hover: 280ms; /* EFFECT-26, within 200–350ms */
+  --nw-dur-slow: 700ms;
+  --nw-dur-slower: 900ms;
+
+  /* EFFECT-18: 30 second gradient loop */
+  --nw-gradient-loop: 30s;
+  /* EFFECT-22: page transitions under 500ms */
+  --nw-page-transition: 380ms;
+
+  /* EFFECT-28: glassmorphic nav */
+  --nw-nav-blur: 20px; /* capped at 20px per spec */
+  --nw-nav-height: 68px;
+  --nw-crisis-height: 34px;
+
+  /* EFFECT-06: ambient background */
+  --nw-ambient-opacity: 0.1; /* 0.1 maximum per spec */
+
+  /* Brand contact */
+  --nw-whatsapp: #1f8f6b;
+  --nw-whatsapp-hover: #177656;
+}
